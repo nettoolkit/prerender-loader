@@ -1,11 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`multiple entry points should inject returned HTML in place of {{prerender}} 1`] = `
+"<!DOCTYPE html><html><head>
+<title>prerender field demo</title>
+</head>
+<body>
+<div id=\\"wrapper\\">
+<div>returned home HTML</div>
+</div>
+<script src=\\"home.bundle.js\\"></script><script src=\\"other.bundle.js\\"></script></body></html>
+
+<!DOCTYPE html><html><head>
+<title>prerender field demo</title>
+</head>
+<body>
+<div id=\\"wrapper\\">
+<div>returned other HTML</div>
+</div>
+<script src=\\"home.bundle.js\\"></script><script src=\\"other.bundle.js\\"></script></body></html>"
+`;
+
 exports[`prerender-loader!x.html Imperative DOM, no {{prerender}} field should return serialized HTML 1`] = `
 "<!DOCTYPE html><html><head>
 <title>Basic Demo</title>
 </head>
 <body>
-<div>this counts as SSR</div><script src=\\"bundle.js\\"></script></body></html>"
+<div>this counts as SSR</div><script src=\\"main.bundle.js\\"></script></body></html>"
 `;
 
 exports[`prerender-loader!x.html default export function, no {{prerender}} field should inject returned HTML into <body> 1`] = `
@@ -13,7 +33,7 @@ exports[`prerender-loader!x.html default export function, no {{prerender}} field
 <title>export factory returning HTML</title>
 </head>
 <body>
-<div>some returned HTML</div><script src=\\"bundle.js\\"></script></body></html>"
+<div>some returned HTML</div><script src=\\"main.bundle.js\\"></script></body></html>"
 `;
 
 exports[`prerender-loader!x.html default export function, with {{prerender}} field should inject returned HTML in place of {{prerender}} 1`] = `
@@ -24,7 +44,7 @@ exports[`prerender-loader!x.html default export function, with {{prerender}} fie
 <div id=\\"wrapper\\">
 <div>more returned HTML</div>
 </div>
-<script src=\\"bundle.js\\"></script></body></html>"
+<script src=\\"main.bundle.js\\"></script></body></html>"
 `;
 
 exports[`prerender-loader!x.html exported function with no return value should serialize the whole document 1`] = `
@@ -32,7 +52,7 @@ exports[`prerender-loader!x.html exported function with no return value should s
 <title>function export with default DOM serialization</title>
 </head>
 <body>
-<div>content injected into the dom</div><script src=\\"bundle.js\\"></script></body></html>"
+<div>content injected into the dom</div><script src=\\"main.bundle.js\\"></script></body></html>"
 `;
 
 exports[`webpack compilation smoke test (no prerendering) should compile 1`] = `
@@ -42,7 +62,7 @@ exports[`webpack compilation smoke test (no prerendering) should compile 1`] = `
 <title>Basic Demo</title>
 </head>
 <body>
-<script src=\\"bundle.js\\"></script></body>
+<script src=\\"main.bundle.js\\"></script></body>
 </html>
 "
 `;
@@ -54,19 +74,7 @@ exports[`webpack compilation smoke test (no prerendering) should compile array e
 <title>Basic Demo</title>
 </head>
 <body>
-<script src=\\"bundle.js\\"></script></body>
-</html>
-"
-`;
-
-exports[`webpack compilation smoke test (no prerendering) should compile array entries 2`] = `
-"<!DOCTYPE html>
-<html>
-<head>
-<title>Basic Demo</title>
-</head>
-<body>
-<script src=\\"bundle.js\\"></script></body>
+<script src=\\"main.bundle.js\\"></script></body>
 </html>
 "
 `;
@@ -78,19 +86,7 @@ exports[`webpack compilation smoke test (no prerendering) should compile named e
 <title>Basic Demo</title>
 </head>
 <body>
-<script src=\\"bundle.js\\"></script></body>
-</html>
-"
-`;
-
-exports[`webpack compilation smoke test (no prerendering) should compile named entries 2`] = `
-"<!DOCTYPE html>
-<html>
-<head>
-<title>Basic Demo</title>
-</head>
-<body>
-<script src=\\"bundle.js\\"></script></body>
+<script src=\\"app.bundle.js\\"></script></body>
 </html>
 "
 `;

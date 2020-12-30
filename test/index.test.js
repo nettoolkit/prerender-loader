@@ -16,7 +16,7 @@
 
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { compile, compileToHtml, readFile } from './_helpers';
+import { compile, compileToHtml, compileMultipleToHtml, readFile } from './_helpers';
 
 const PRERENDER_LOADER = path.resolve(__dirname, '../src');
 
@@ -31,8 +31,8 @@ const configure = prerenderLoaderOptions => config => {
   }
   config.plugins.push(
     new HtmlWebpackPlugin({
-      filename: 'index.html',
       template,
+      filename: 'index.html',
       compile: false,
       inject: true,
       minify: {
@@ -168,5 +168,38 @@ describe('prerender-loader!x.html', () => {
       // verify that our DOM-generated content has been prerendered into the static HTML:
       expect(document.body.firstElementChild).toHaveProperty('outerHTML', `<div>${DOCUMENT_URL}</div>`);
     });
+  });
+});
+
+describe('multiple entry points', () => {
+  const configureMultiple = config => {
+    const template = path.resolve(config.context, 'index.html');
+    Object.keys(config.entry).forEach(entryKey => {
+      const options = {
+        string: true,
+        entry: `./${entryKey}.js`
+      };
+      config.plugins.push(new HtmlWebpackPlugin({
+        template: `!!${PRERENDER_LOADER}?${JSON.stringify(options)}!${template}`,
+        filename: entryKey + '.html',
+        compile: false,
+        inject: true,
+        minify: {
+          collapseWhitespace: true,
+          preserveLineBreaks: true
+        }
+      }));
+    });
+  };
+  it('should inject returned HTML in place of {{prerender}}', async () => {
+    const { html } = await compileMultipleToHtml('multiple-with-field', configureMultiple);
+    expect(html).toHaveProperty('home');
+    expect(html.home).toMatch(/<div>returned home HTML<\/div>/);
+    expect(html.home).not.toMatch(/<div>returned other HTML<\/div>/);
+    expect(html).toHaveProperty('other');
+    expect(html.other).toMatch(/<div>returned other HTML<\/div>/);
+    expect(html.other).not.toMatch(/<div>returned home HTML<\/div>/);
+    const bothHtml = html.home + '\n\n' + html.other;
+    expect(bothHtml).toMatchSnapshot();
   });
 });

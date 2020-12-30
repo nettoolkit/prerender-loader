@@ -29,17 +29,23 @@ export const parseDom = html => new DOMParser().parseFromString(html, 'text/html
 export const readFile = file => promisify(fs.readFile)(path.resolve(__dirname, file), 'utf8');
 
 // invoke webpack on a given entry module, optionally mutating the default configuration
-export function compile (entry, configDecorator) {
+export function compile (entryItem, configDecorator) {
   return new Promise((resolve, reject) => {
-    const context = path.dirname(path.resolve(__dirname, entry));
-    entry = path.basename(entry);
+    let context, entry;
+    if (typeof entryItem === 'object') {
+      context = path.dirname(path.resolve(__dirname, Object.values(entryItem)[0]));
+      entry = entryItem;
+    } else {
+      context = path.dirname(path.resolve(__dirname, entryItem));
+      entry = path.resolve(context, path.basename(entryItem));
+    }
     let config = {
       mode: 'development', // required so webpack doesn't squash certain errors
       context,
-      entry: path.resolve(context, entry),
+      entry,
       output: {
         path: path.resolve(__dirname, path.resolve(context, 'dist')),
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
         chunkFilename: '[name].chunk.js'
       },
       resolveLoader: {
@@ -72,4 +78,29 @@ export async function compileToHtml (fixture, configDecorator, crittersOptions =
   info.html = await readFile(`fixtures/${fixture}/dist/index.html`);
   info.document = parseDom(info.html);
   return info;
+}
+
+export async function compileMultipleToHtml (fixture, configDecorator) {
+  const context = path.resolve(__dirname, `fixtures/${fixture}`);
+  const jsFiles = fs.readdirSync(context).filter(filename => filename.endsWith('.js'));
+  const entry = jsFiles.reduce((acc, filename) => {
+    const entryKey = getEntryKey(filename);
+    acc[entryKey] = path.resolve(context, filename);
+    return acc;
+  }, {});
+  const info = await compile(entry, configDecorator);
+  // Include HTML and document for each generated HTML file, indexed by entry key.
+  info.html = {};
+  info.document = {};
+  for (const entryKey of Object.keys(entry)) {
+    const htmlFilename = entryKey + '.html';
+    const html = await readFile(`fixtures/${fixture}/dist/${htmlFilename}`);
+    info.html[entryKey] = html;
+    info.document[entryKey] = parseDom(html);
+  }
+  return info;
+}
+
+export function getEntryKey (filePath) {
+  return path.basename(filePath, path.extname(filePath));
 }
