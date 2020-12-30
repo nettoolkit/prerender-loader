@@ -71,7 +71,7 @@ export default function PrerenderLoader (content) {
     const matches = content.match(PRERENDER_REG);
     if (matches) {
       inject = true;
-      options.entry = matches[1];
+      options.entry = matches[1] || options.entry;
     }
     options.templateContent = content;
   }
