@@ -22,7 +22,7 @@ import NodeTemplatePlugin from 'webpack/lib/node/NodeTemplatePlugin';
 import NodeTargetPlugin from 'webpack/lib/node/NodeTargetPlugin';
 import { DefinePlugin } from 'webpack';
 import MemoryFs from 'memory-fs';
-import { runChildCompiler, getRootCompiler, getBestModuleExport, stringToModule, convertPathToRelative } from './util';
+import { runChildCompiler, getRootCompiler, getBestModuleExport, stringToModule, normalizeEntry } from './util';
 import { applyEntry } from './webpack-util';
 
 // Used to annotate this plugin's hooks in Tappable invocations
@@ -92,7 +92,7 @@ async function prerender (parentCompilation, request, options, inject, loader) {
   const parentCompiler = getRootCompiler(parentCompilation.compiler);
   const context = parentCompiler.options.context || process.cwd();
   const customEntry = options.entry && ([].concat(options.entry).pop() || '').trim();
-  const entry = customEntry ? ('./' + customEntry) : convertPathToRelative(context, parentCompiler.options.entry, './');
+  const entry = customEntry ? ('./' + customEntry) : normalizeEntry(context, parentCompiler.options.entry, './');
 
   const outputOptions = {
     // fix: some plugins ignore/bypass outputfilesystem, so use a temp directory and ignore any writes.

@@ -14,24 +14,30 @@
  * the License.
  */
 
-import SingleEntryPlugin from 'webpack/lib/SingleEntryPlugin';
-import MultiEntryPlugin from 'webpack/lib/MultiEntryPlugin';
+import EntryPlugin from 'webpack/lib/EntryPlugin';
 
 /** Handle "object", "string" and "array" types of entry */
 export function applyEntry (context, entry, compiler) {
-  if (typeof entry === 'string' || Array.isArray(entry)) {
+  if (typeof entry === 'string') {
     itemToPlugin(context, entry, 'main').apply(compiler);
+  } else if (Array.isArray(entry)) {
+    entry.forEach(item => {
+      itemToPlugin(context, item, 'main').apply(compiler);
+    });
   } else if (typeof entry === 'object') {
     Object.keys(entry).forEach(name => {
-      itemToPlugin(context, entry[name], name).apply(compiler);
+      const item = entry[name];
+      if (Array.isArray(item)) {
+        item.forEach(subItem => {
+          itemToPlugin(context, subItem, name).apply(compiler);
+        });
+      } else {
+        itemToPlugin(context, item, name).apply(compiler);
+      }
     });
   }
 }
 
 function itemToPlugin (context, item, name) {
-  if (Array.isArray(item)) {
-    return new MultiEntryPlugin(context, item, name);
-  }
-
-  return new SingleEntryPlugin(context, item, name);
+  return new EntryPlugin(context, item, { name });
 }

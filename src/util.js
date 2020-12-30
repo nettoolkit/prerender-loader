@@ -29,7 +29,18 @@ export function runChildCompiler (compiler) {
 
       // Bubble stat errors up and reject the Promise:
       if (compilation.errors && compilation.errors.length) {
-        const errorDetails = compilation.errors.map(error => error.details).join('\n');
+        const errorDetails = compilation.errors.map(error => {
+          if (error instanceof Error) {
+            // In webpack 5, compilation error objects appear to be actual Errors.
+            // For these, we want to reject with the stack trace for easier debugging.
+            return error.stack;
+          } else if (error.details) {
+            // In webpack 4 and before, errors object appear to have a `details` property,
+            // containing debug information about the error.
+            return error.details;
+          }
+          return error;
+        }).join('\n');
         return reject(Error('Child compilation failed:\n' + errorDetails));
       }
 
@@ -63,16 +74,36 @@ export function stringToModule (str) {
   return 'export default ' + JSON.stringify(str);
 }
 
-export function convertPathToRelative (context, entry, prefix = '') {
-  if (Array.isArray(entry)) {
-    return entry.map(entry => prefix + path.relative(context, entry));
-  } else if (entry && typeof entry === 'object') {
+/**
+ * Takes the context path, entry, and optional prefix, and returns an entry-like value
+ * that can be used in the loader.
+ */
+export function normalizeEntry (context, entry, prefix = '') {
+  if (entry && typeof entry === 'object') {
     return Object.keys(entry).reduce((acc, key) => {
-      acc[key] = Array.isArray(entry[key])
-        ? entry[key].map(item => prefix + path.relative(context, item))
-        : prefix + path.relative(context, entry[key]);
+      const entryItem = entry[key];
+      // In webpack 5, entry can be a string, array of strings, or an object called an
+      // entry descriptor that has `import` property pointing to a path string or
+      // array of path strings. Entry descriptors are not handled by the
+      // NormalModuleFactory eventually used to process entries).
+      // Therefore, we convert descriptors to simple path string(s) instead.
+      if (typeof entryItem === 'object' && entryItem.import) {
+        acc[key] = convertPathToRelative(context, entryItem.import, prefix);
+      } else {
+        acc[key] = convertPathToRelative(context, entryItem, prefix);
+      }
       return acc;
     }, {});
   }
-  return prefix + path.relative(context, entry);
+  return convertPathToRelative(context, entry, prefix);
+}
+
+/**
+ * Takes single path or array of paths and returns single relative path or array of relative paths.
+ */
+function convertPathToRelative (context, entryPath, prefix) {
+  if (Array.isArray(entryPath)) {
+    return entryPath.map(p => prefix + path.relative(context, p));
+  }
+  return prefix + path.relative(context, entryPath);
 }
