@@ -34,6 +34,7 @@ export function compile (entry, configDecorator) {
     const context = path.dirname(path.resolve(__dirname, entry));
     entry = path.basename(entry);
     let config = {
+      mode: 'development', // required so webpack doesn't squash certain errors
       context,
       entry: path.resolve(context, entry),
       output: {
@@ -53,9 +54,13 @@ export function compile (entry, configDecorator) {
       config = configDecorator(config) || config;
     }
     webpack(config, (err, stats) => {
-      if (err) return reject(err);
+      if (err) {
+        return reject(err);
+      }
       const info = stats.toJson();
-      if (stats.hasErrors()) return reject(info.errors.join('\n'));
+      if (stats.hasErrors()) {
+        return reject(info.errors.map(error => error.message).join('\n'));
+      }
       resolve(info);
     });
   });

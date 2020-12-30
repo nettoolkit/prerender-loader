@@ -86,8 +86,10 @@ describe('webpack compilation smoke test (no prerendering)', () => {
 
 describe('prerender-loader!x.html', () => {
   describe('?disabled', async () => {
-    const { html } = await compileToHtml('basic', configure({ disabled: true, string: true }));
-    expect(html).not.toMatch(/<div>this counts as SSR<\/div>/);
+    it('should not serialize HTML', async () => {
+      const { html } = await compileToHtml('basic', configure({ disabled: true, string: true }));
+      expect(html).not.toMatch(/<div>this counts as SSR<\/div>/);
+    });
   });
 
   describe('Imperative DOM, no {{prerender}} field', () => {
