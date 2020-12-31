@@ -1,6 +1,6 @@
 {
   "name": "prerender-loader",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "Painless universal prerendering for Webpack. Works great with html-webpack-plugin.",
   "main": "src/index.js",
   "source": "src/index.js",
@@ -21,12 +21,10 @@
     "first contentful paint",
     "FCP"
   ],
-  "repository": "GoogleChromeLabs/prerender-loader",
+  "repository": "nettoolkit/prerender-loader",
   "scripts": {
     "docs": "documentation readme -q --no-markdown-toc -a public -s Usage --sort-order alpha src",
-    "test": "jest --coverage",
-    "prepare": "npm run -s build",
-    "release": "npm run build -s && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    "test": "jest --coverage"
   },
   "babel": {
     "presets": [
@@ -50,7 +48,7 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^23.0.0",
     "babel-preset-env": "^1.7.0",
-    "documentation": "^7.0.0",
+    "documentation": "^13.1.0",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.12.0",
