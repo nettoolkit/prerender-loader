@@ -14,13 +14,13 @@
  * the License.
  */
 
-import path from 'path';
+const path = require('path');
 
 /**
  * Promisified version of compiler.runAsChild() with error hoisting and isolated output/assets.
  * (runAsChild() merges assets into the parent compilation, we don't want that)
  */
-export function runChildCompiler (compiler) {
+function runChildCompiler (compiler) {
   return new Promise((resolve, reject) => {
     compiler.compile((err, compilation) => {
       // still allow the parent compiler to track execution of the child:
@@ -50,7 +50,7 @@ export function runChildCompiler (compiler) {
 }
 
 /** Crawl up the compiler tree and return the outermost compiler instance */
-export function getRootCompiler (compiler) {
+function getRootCompiler (compiler) {
   while (compiler.parentCompilation && compiler.parentCompilation.compiler) {
     compiler = compiler.parentCompilation.compiler;
   }
@@ -58,7 +58,7 @@ export function getRootCompiler (compiler) {
 }
 
 /** Find the best possible export for an ES Module. Returns `undefined` for no exports. */
-export function getBestModuleExport (exports) {
+function getBestModuleExport (exports) {
   if (exports.default) {
     return exports.default;
   }
@@ -70,7 +70,7 @@ export function getBestModuleExport (exports) {
 }
 
 /** Wrap a String up into an ES Module that exports it */
-export function stringToModule (str) {
+function stringToModule (str) {
   return 'export default ' + JSON.stringify(str);
 }
 
@@ -78,7 +78,7 @@ export function stringToModule (str) {
  * Takes the context path, entry, and optional prefix, and returns an entry-like value
  * that can be used in the loader.
  */
-export function normalizeEntry (context, entry, prefix = '') {
+function normalizeEntry (context, entry, prefix = '') {
   if (entry && typeof entry === 'object') {
     return Object.keys(entry).reduce((acc, key) => {
       const entryItem = entry[key];
@@ -107,3 +107,11 @@ function convertPathToRelative (context, entryPath, prefix) {
   }
   return prefix + path.relative(context, entryPath);
 }
+
+module.exports = {
+  runChildCompiler,
+  getRootCompiler,
+  getBestModuleExport,
+  stringToModule,
+  normalizeEntry
+};

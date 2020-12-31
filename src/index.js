@@ -14,16 +14,33 @@
  * the License.
  */
 
-import os from 'os';
-import jsdom from 'jsdom';
-import loaderUtils from 'loader-utils';
-import LibraryTemplatePlugin from 'webpack/lib/LibraryTemplatePlugin';
-import NodeTemplatePlugin from 'webpack/lib/node/NodeTemplatePlugin';
-import NodeTargetPlugin from 'webpack/lib/node/NodeTargetPlugin';
-import { DefinePlugin } from 'webpack';
-import MemoryFs from 'memory-fs';
-import { runChildCompiler, getRootCompiler, getBestModuleExport, stringToModule, normalizeEntry } from './util';
-import { applyEntry } from './webpack-util';
+// import os from 'os';
+// import jsdom from 'jsdom';
+// import loaderUtils from 'loader-utils';
+// import LibraryTemplatePlugin from 'webpack/lib/LibraryTemplatePlugin';
+// import NodeTemplatePlugin from 'webpack/lib/node/NodeTemplatePlugin';
+// import NodeTargetPlugin from 'webpack/lib/node/NodeTargetPlugin';
+// import { DefinePlugin } from 'webpack';
+// import MemoryFs from 'memory-fs';
+// import { runChildCompiler, getRootCompiler, getBestModuleExport, stringToModule, normalizeEntry } from './util';
+// import { applyEntry } from './webpack-util';
+
+const os = require('os');
+const jsdom = require('jsdom');
+const loaderUtils = require('loader-utils');
+const LibraryTemplatePlugin = require('webpack/lib/LibraryTemplatePlugin');
+const NodeTemplatePlugin = require('webpack/lib/node/NodeTemplatePlugin');
+const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin');
+const DefinePlugin = require('webpack/lib/DefinePlugin');
+const MemoryFs = require('memory-fs');
+const {
+  runChildCompiler,
+  getRootCompiler,
+  getBestModuleExport,
+  stringToModule,
+  normalizeEntry
+} = require('./util');
+const { applyEntry } = require('./webpack-util');
 
 // Used to annotate this plugin's hooks in Tappable invocations
 const PLUGIN_NAME = 'prerender-loader';

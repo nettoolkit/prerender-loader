@@ -14,10 +14,10 @@
  * the License.
  */
 
-import EntryPlugin from 'webpack/lib/EntryPlugin';
+const EntryPlugin = require('webpack/lib/EntryPlugin');
 
 /** Handle "object", "string" and "array" types of entry */
-export function applyEntry (context, entry, compiler) {
+function applyEntry (context, entry, compiler) {
   if (typeof entry === 'string') {
     itemToPlugin(context, entry, 'main').apply(compiler);
   } else if (Array.isArray(entry)) {
@@ -41,3 +41,7 @@ export function applyEntry (context, entry, compiler) {
 function itemToPlugin (context, item, name) {
   return new EntryPlugin(context, item, { name });
 }
+
+module.exports = {
+  applyEntry
+};
