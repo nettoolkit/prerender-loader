@@ -72,7 +72,7 @@ const PRERENDER_REG = /\{\{prerender(?::\s*([^}]+?)\s*)?\}\}/;
  * // inline demo: assumes you have html-loader set up:
  * import prerenderedHtml from '!prerender-loader!./file.html';
  */
-export default function PrerenderLoader (content) {
+function PrerenderLoader (content) {
   const options = loaderUtils.getOptions(this) || {};
   const outputFilter = options.as === 'string' || options.string ? stringToModule : String;
 
@@ -309,3 +309,5 @@ async function prerender (parentCompilation, request, options, inject, loader) {
   // return dom.serialize();
   // return result;
 }
+
+module.exports = PrerenderLoader;
