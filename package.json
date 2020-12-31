@@ -2,6 +2,7 @@
   "name": "prerender-loader",
   "version": "1.3.0",
   "description": "Painless universal prerendering for Webpack. Works great with html-webpack-plugin.",
+  "main": "src/index.js",
   "source": "src/index.js",
   "license": "Apache-2.0",
   "author": "The Chromium Authors",
@@ -22,7 +23,6 @@
   ],
   "repository": "GoogleChromeLabs/prerender-loader",
   "scripts": {
-    "build": "microbundle -f cjs --no-compress --external all",
     "docs": "documentation readme -q --no-markdown-toc -a public -s Usage --sort-order alpha src",
     "test": "jest --coverage",
     "prepare": "npm run -s build",
