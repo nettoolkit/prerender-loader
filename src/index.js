@@ -128,19 +128,23 @@ async function prerender (parentCompilation, request, options, inject, loader) {
   // Kick off compilation at our entry module (either the parent compiler's entry or a custom one defined via `{{prerender:entry.js}}`)
   applyEntry(context, entry, compiler);
 
+  // NOTE: compilation.cache is deprecated in webpack 5.
+  // All tests appear to pass without setting up a subcache.
+  // What was the purpose of this subcache?
+  //
   // Set up cache inheritance for the child compiler
-  const subCache = 'subcache ' + request;
-  function addChildCache (compilation, data) {
-    if (compilation.cache) {
-      if (!compilation.cache[subCache]) compilation.cache[subCache] = {};
-      compilation.cache = compilation.cache[subCache];
-    }
-  }
-  if (compiler.hooks) {
-    compiler.hooks.compilation.tap(PLUGIN_NAME, addChildCache);
-  } else {
-    compiler.plugin('compilation', addChildCache);
-  }
+  // const subCache = 'subcache ' + request;
+  // function addChildCache (compilation, data) {
+  //   if (compilation.cache) {
+  //     if (!compilation.cache[subCache]) compilation.cache[subCache] = {};
+  //     compilation.cache = compilation.cache[subCache];
+  //   }
+  // }
+  // if (compiler.hooks) {
+  //   compiler.hooks.compilation.tap(PLUGIN_NAME, addChildCache);
+  // } else {
+  //   compiler.plugin('compilation', addChildCache);
+  // }
 
   const compilation = await runChildCompiler(compiler);
   let result;
