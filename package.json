@@ -1,30 +1,38 @@
 {
-  "name": "prerender-loader",
-  "version": "2.0.0",
-  "description": "Painless universal prerendering for Webpack. Works great with html-webpack-plugin.",
+  "name": "@nettoolkit/prerender-loader",
+  "version": "1.0.0",
+  "description": "Painless universal prerendering for Webpack 5. Works great with html-webpack-plugin.",
   "main": "src/index.js",
   "source": "src/index.js",
   "license": "Apache-2.0",
-  "author": "The Chromium Authors",
+  "author": "The Chromium Authors, NetToolKit",
   "contributors": [
     {
-      "name": "Jason Miller",
-      "email": "developit@google.com"
+      "name": "Daniel Woznicki",
+      "email": "danwoz@nettoolkit.com"
     }
   ],
   "keywords": [
     "pre-render",
     "prerendering",
     "webpack plugin",
+    "webpack 5",
     "SSR",
     "performance",
     "first contentful paint",
     "FCP"
   ],
-  "repository": "nettoolkit/prerender-loader",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nettoolkit/prerender-loader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nettoolkit/prerender-loader/issues"
+  },
+  "homepage": "https://github.com/nettoolkit/prerender-loader#readme",
   "scripts": {
     "docs": "documentation readme -q --no-markdown-toc -a public -s Usage --sort-order alpha src",
-    "test": "jest --coverage"
+    "test": "jest --converage"
   },
   "babel": {
     "presets": [
@@ -43,6 +51,27 @@
       "node_modules",
       "dist"
     ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "standard",
+      "plugin:jest/recommended"
+    ],
+    "env": {
+      "browser": false,
+      "node": true
+    },
+    "rules": {
+      "indent": [
+        2,
+        2
+      ],
+      "semi": [
+        2,
+        "always"
+      ],
+      "prefer-const": 1
+    }
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -70,26 +99,5 @@
   "peerDependencies": {
     "webpack": "*",
     "memory-fs": "*"
-  },
-  "eslintConfig": {
-    "extends": [
-      "standard",
-      "plugin:jest/recommended"
-    ],
-    "env": {
-      "browser": false,
-      "node": true
-    },
-    "rules": {
-      "indent": [
-        2,
-        2
-      ],
-      "semi": [
-        2,
-        "always"
-      ],
-      "prefer-const": 1
-    }
   }
 }

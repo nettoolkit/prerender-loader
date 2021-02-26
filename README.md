@@ -9,6 +9,8 @@
 Painless universal prerendering for Webpack. Works great with
 [html-webpack-plugin].
 
+This is a Webpack 5 compatible fork of the original [prerender-loader](https://github.com/GoogleChromeLabs/prerender-loader).
+
 > 🧐 **What is Prerendering?**
 >
 >Pre-rendering describes the process of rendering a client-side application at
