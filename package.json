@@ -1,6 +1,6 @@
 {
   "name": "@nettoolkit/prerender-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Painless universal prerendering for Webpack 5. Works great with html-webpack-plugin.",
   "main": "src/index.js",
   "source": "src/index.js",
