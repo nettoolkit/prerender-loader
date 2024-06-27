@@ -32,7 +32,7 @@
   "homepage": "https://github.com/nettoolkit/prerender-loader#readme",
   "scripts": {
     "docs": "documentation readme -q --no-markdown-toc -a public -s Usage --sort-order alpha src",
-    "test": "jest --converage"
+    "test": "jest --coverage"
   },
   "babel": {
     "presets": [

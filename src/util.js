@@ -23,9 +23,16 @@ const path = require('path');
 function runChildCompiler (compiler) {
   return new Promise((resolve, reject) => {
     compiler.compile((err, compilation) => {
+      /** Only registering the compilation when there is error, because it consumes a lot of memory if there are multiple prerenders/entries ocurring during a compilation */
+      function addCompilationToParent() {
+        compiler.parentCompilation.children.push(compilation);
+      }
+
       // still allow the parent compiler to track execution of the child:
-      compiler.parentCompilation.children.push(compilation);
-      if (err) return reject(err);
+      if (err) {
+        addCompilationToParent()
+        return reject(err);
+      }
 
       // Bubble stat errors up and reject the Promise:
       if (compilation.errors && compilation.errors.length) {
@@ -41,6 +48,7 @@ function runChildCompiler (compiler) {
           }
           return error;
         }).join('\n');
+        addCompilationToParent()
         return reject(Error('Child compilation failed:\n' + errorDetails));
       }
 
