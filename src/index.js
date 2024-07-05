@@ -146,7 +146,8 @@ async function prerender (parentCompilation, request, options, inject, loader) {
   const outputOptions = {
     // fix: some plugins ignore/bypass outputfilesystem, so use a temp directory and ignore any writes.
     path: os.tmpdir(),
-    filename: FILENAME
+    filename: FILENAME,
+    publicPath: parentCompiler.options.output.publicPath
   };
 
   // Only copy over allowed plugins (excluding them breaks extraction entirely).
